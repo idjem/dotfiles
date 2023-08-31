@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# bash_paths
+
+DOTFILES_DIRECTORY="${HOME}/dvp/dotfiles"
+
 
 # Directories to be prepended to PATH
 declare -a dirs_to_prepend=(
@@ -11,10 +13,8 @@ declare -a dirs_to_prepend=(
 declare -a dirs_to_append=(
     "/usr/bin"
     "$HOME/bin"
-    "$HOME/.dotfiles/bin"
+    "$DOTFILES_DIRECTORY/bin"
     "$HOME/.rvm/bin"
-    "$(brew --prefix coreutils)/libexec/gnubin" # Add brew-installed GNU core utilities bin
-    "$(brew --prefix)/share/npm/bin" # Add npm-installed package bin
 )
 
 # Prepend directories to PATH
