@@ -14,7 +14,7 @@ declare -a dirs_to_append=(
     "/usr/bin"
     "$HOME/bin"
     "$DOTFILES_DIRECTORY/bin"
-    "$HOME/.rvm/bin"
+    "/opt/homebrew/bin"
 )
 
 # Prepend directories to PATH
