@@ -2,6 +2,19 @@
 
 # bash_profile
 
+
+# add ssh_key
+
+DOTFILES_DIRECTORY="${HOME}/dvp/dotfiles"
+
+SSH_KEY_PATH="${HOME}/dvp/ssh/private.pem"
+
+if [ -z "$SSH_AUTH_SOCK" ] ; then
+  eval `ssh-agent -s`
+  ssh-add $SSH_KEY_PATH
+fi
+
+
 # set 256 color profile where possible
 if [[ $COLORTERM == gnome-* && $TERM == xterm ]] && infocmp gnome-256color >/dev/null 2>&1; then
     export TERM=gnome-256color
@@ -9,7 +22,6 @@ elif infocmp xterm-256color >/dev/null 2>&1; then
     export TERM=xterm-256color
 fi
 
-DOTFILES_DIRECTORY="${HOME}/dvp/dotfiles"
 
 load_dotfiles() {
     declare -a files=(
