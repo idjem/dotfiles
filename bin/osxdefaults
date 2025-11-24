@@ -18,6 +18,9 @@ defaults write com.apple.dock mru-spaces -bool false
 # Activate dark mode
 osascript -e 'tell app "System Events" to tell appearance preferences to set dark mode to true'
 
+# Change scroll trackpad direction
+defaults write -g com.apple.swipescrolldirection -bool FALSE
+
 
 # Dock
 # ----------------------------------------------------------------------

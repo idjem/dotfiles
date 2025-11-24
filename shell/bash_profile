@@ -2,8 +2,9 @@
 
 # bash_profile
 
-
 # add ssh_key
+
+export KUBECONFIG=~/.kube/config.teleport
 
 DOTFILES_DIRECTORY="${HOME}/dvp/dotfiles"
 
@@ -31,6 +32,7 @@ load_dotfiles() {
         $DOTFILES_DIRECTORY/shell/bash_exports # Exports
         $DOTFILES_DIRECTORY/shell/bash_aliases # Aliases
         $DOTFILES_DIRECTORY/shell/bash_prompt # Custom bash prompt
+        $DOTFILES_DIRECTORY/shell/nvm # add nvm to path
         $(brew --prefix)/etc/bash_completion # Bash completion (installed via Homebrew)
         $HOME/.bash_profile.local # Local and private settings not under version control (e.g. git credentials)
     )
@@ -46,3 +48,6 @@ load_dotfiles() {
 
 load_dotfiles
 unset load_dotfiles
+
+
+. "$HOME/.cargo/env"

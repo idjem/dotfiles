@@ -1,0 +1,37 @@
+#!/bin/bash
+
+copycode() {
+    echo "start copycode" 
+    local extensions="${1:-ts,tsx,js,json,md}"  # Set "ts,tsx,js" as the default extensions if none provided
+
+    # Check if pbcopy is available
+    if ! command -v pbcopy &> /dev/null; then
+        echo "pbcopy is not available. This script requires macOS to run."
+        return 1
+    fi
+
+    # Create a temporary file to store the result
+    local temp_file=$(mktemp)
+
+    # Split extensions and iterate over them using bash syntax
+    IFS=',' read -r -a exts <<< "$extensions"
+    for ext in "${exts[@]}"; do
+        # Find and concatenate files for each extension, excluding node_modules
+        find . -name "*.$ext" -not -path "*/.nx/*" -not -path "*/node_modules/*" -print | while read -r filename; do
+            echo "// File: $filename" 
+            echo "// File: $filename" >> "$temp_file"
+            cat "$filename" >> "$temp_file"
+            echo "" >> "$temp_file"  # Adds an empty line for separation
+        done
+    done
+
+    # Copy the content of the temporary file to the clipboard using pbcopy
+    pbcopy < "$temp_file"
+
+    # Remove the temporary file
+    rm "$temp_file"
+
+    echo "Content has been copied to the clipboard."
+}
+
+copycode

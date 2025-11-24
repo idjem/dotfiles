@@ -95,6 +95,9 @@ run_brew() {
         # install separately from the main formulae list to fix gh-19
         brew install https://raw.github.com/Homebrew/homebrew-dupes/master/rsync.rb
 
+        #install nvm
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
+
         # Remove outdated versions from the Cellar
         brew cleanup
     else
