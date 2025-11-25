@@ -30,14 +30,42 @@ type_exists() {
 }
 
 # Test whether a Homebrew formula is already installed
-# $1 - formula name (may include options)
+# $1 - formula name
+# $2 - optional: "cask" if it's a cask
 formula_exists() {
-    if $(brew list $1 >/dev/null); then
-        printf "%s already installed.\n" "$1"
-        return 0
+    local name=$1
+    local is_cask=$2
+    
+    if [ "$is_cask" = "cask" ]; then
+        # Check if installed via Homebrew
+        if $(brew list --cask $name >/dev/null 2>&1); then
+            printf "%s already installed (via Homebrew).\n" "$name"
+            return 0
+        fi
+        # Check if app exists in /Applications (installed manually)
+        # Convert cask name to app name (e.g., "alt-tab" -> "Alt Tab")
+        local app_name=""
+        case $name in
+            "alt-tab") app_name="AltTab.app" ;;
+            "iterm2") app_name="iTerm.app" ;;
+            "rectangle") app_name="Rectangle.app" ;;
+            "jumpcut") app_name="Jumpcut.app" ;;
+            "gather") app_name="Gather.app" ;;
+            *) app_name="${name^}.app" ;;
+        esac
+        
+        if [ -d "/Applications/$app_name" ]; then
+            printf "%s already installed (manually, not managed by Homebrew).\n" "$name"
+            return 0
+        fi
+    else
+        if $(brew list $name >/dev/null 2>&1); then
+            printf "%s already installed.\n" "$name"
+            return 0
+        fi
     fi
 
-    e_warning "Missing formula: $1"
+    e_warning "Missing formula: $name"
     return 1
 }
 
@@ -56,44 +84,52 @@ run_brew() {
         [[ $? ]] && e_success "Done"
 
         e_header "Checking status of desired Homebrew formulae..."
-        local list_formulae
         local -a missing_formulae
+        local -a missing_casks
         local -a desired_formulae=(
             'git'
             'bash'
             'bash-completion'
-            'node'
             'tree'
             'wget'
-            'gather --cask'
-            'rectangle --cask'
-            'alt-tab --cask'
-            'iterm2 --cask'
-            'jumpcut --cask'
+        )
+        local -a desired_casks=(
+            'gather'
+            'rectangle'
+            'alt-tab'
+            'iterm2'
+            'jumpcut'
         )
 
+        # Check formulae
         for index in ${!desired_formulae[*]}
         do
             if ! formula_exists ${desired_formulae[$index]}; then
-                # Store the name (and options) of every missing formula
                 missing_formulae=("${missing_formulae[@]}" "${desired_formulae[$index]}")
             fi
         done
 
+        # Check casks
+        for index in ${!desired_casks[*]}
+        do
+            if ! formula_exists ${desired_casks[$index]} "cask"; then
+                missing_casks=("${missing_casks[@]}" "${desired_casks[$index]}")
+            fi
+        done
+
+        # Install missing formulae
         if [[ "$missing_formulae" ]]; then
-            # Convert the array of missing formula into a list of space-separate strings
-            list_formulae=$( printf "%s " "${missing_formulae[@]}" )
-
             e_header "Installing missing Homebrew formulae..."
-            # Install all missing formulae
-            brew install $list_formulae
-
+            brew install "${missing_formulae[@]}"
             [[ $? ]] && e_success "Done"
         fi
 
-        # use latest rsync rather than out-dated OS X rsync
-        # install separately from the main formulae list to fix gh-19
-        brew install https://raw.github.com/Homebrew/homebrew-dupes/master/rsync.rb
+        # Install missing casks
+        if [[ "$missing_casks" ]]; then
+            e_header "Installing missing Homebrew casks..."
+            brew install --cask "${missing_casks[@]}"
+            [[ $? ]] && e_success "Done"
+        fi
 
         #install nvm
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash

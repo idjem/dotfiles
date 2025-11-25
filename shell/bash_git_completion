@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# bash_git_completion
+# Load Git completion scripts
+
+# Git completion (provided by git via Homebrew)
+if [ -f /opt/homebrew/etc/bash_completion.d/git-completion.bash ]; then
+    . /opt/homebrew/etc/bash_completion.d/git-completion.bash
+fi
+
+# Git prompt script (for __git_ps1 function if you want to use it)
+if [ -f /opt/homebrew/etc/bash_completion.d/git-prompt.sh ]; then
+    . /opt/homebrew/etc/bash_completion.d/git-prompt.sh
+fi
+
