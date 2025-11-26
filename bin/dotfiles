@@ -51,6 +51,7 @@ formula_exists() {
             "rectangle") app_name="Rectangle.app" ;;
             "jumpcut") app_name="Jumpcut.app" ;;
             "gather") app_name="Gather.app" ;;
+            "cursor") app_name="Cursor.app" ;;
             *) app_name="${name^}.app" ;;
         esac
         
@@ -99,6 +100,7 @@ run_brew() {
             'alt-tab'
             'iterm2'
             'jumpcut'
+            'cursor'
         )
 
         # Check formulae
@@ -146,6 +148,21 @@ run_brew() {
 }
 
 run_brew
+
+# Install Cursor command in PATH
+install_cursor_command() {
+    if [ -d "/Applications/Cursor.app" ]; then
+        e_header "Installing Cursor command in PATH..."
+        if [ ! -L "/usr/local/bin/cursor" ]; then
+            sudo ln -sf "/Applications/Cursor.app/Contents/Resources/app/bin/cursor" "/usr/local/bin/cursor"
+            [[ $? ]] && e_success "Cursor command installed"
+        else
+            e_success "Cursor command already installed"
+        fi
+    fi
+}
+
+install_cursor_command
 
 
 # Ask for confirmation before proceeding
