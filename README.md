@@ -37,12 +37,7 @@ Personal macOS dotfiles for development environment configuration.
    cd ~/dvp/dotfiles
    ```
 
-2. **Make scripts executable**
-   ```bash
-   chmod +x bin/*
-   ```
-
-3. **Run the dotfiles installer**
+2. **Run the dotfiles installer**
    ```bash
    ./bin/dotfiles
    ```
@@ -216,7 +211,6 @@ git clone https://github.com/yourusername/dotfiles.git ~/dvp/dotfiles
 
 # 2. Install everything
 cd ~/dvp/dotfiles
-chmod +x bin/*
 ./bin/dotfiles
 
 # 3. Sync Cursor extensions
