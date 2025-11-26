@@ -1,0 +1,41 @@
+{
+    "update.channel": "none",
+    "update.mode": "manual",
+    "workbench.colorTheme": "Night Owl",
+    "editor.tabSize": 2,
+    "liveshare.presence": true,
+    "sftp.downloadWhenOpenInRemoteExplorer": true,
+    "[javascript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "[html]": {
+        "editor.defaultFormatter": "vscode.html-language-features"
+    },
+    "editor.inlineSuggest.enabled": true,
+    "window.zoomLevel": 2,
+    "nxConsole.showNodeVersionOnStartup": false,
+    "diffEditor.ignoreTrimWhitespace": false,
+    "diffEditor.hideUnchangedRegions.enabled": true,
+    "typescript.updateImportsOnFileMove.enabled": "never",
+    "prisma.showPrismaDataPlatformNotification": false,
+    "github.copilot.editor.enableAutoCompletions": true,
+    "javascript.updateImportsOnFileMove.enabled": "never",
+    "git.openRepositoryInParentFolders": "never",
+    "explorer.confirmDelete": false,
+    "security.promptForLocalFileProtocolHandling": false,
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+        "vue",
+        "html",
+        "markdown",
+        "json",
+        "jsonc"
+    ]
+}
