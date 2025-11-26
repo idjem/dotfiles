@@ -1,0 +1,76 @@
+#!/bin/bash
+
+# Sync Cursor extensions
+# Inspired by: https://dev.to/0916dhkim/sync-cursor-settings-the-dotfiles-way-20c9
+
+DOTFILES_DIRECTORY="${HOME}/dvp/dotfiles"
+EXTENSIONS_LIST="${DOTFILES_DIRECTORY}/cursor/.cursor-extensions.txt"
+
+# Colors
+e_header() {
+    printf "\n$(tput setaf 7)%s$(tput sgr0)\n" "$@"
+}
+
+e_success() {
+    printf "$(tput setaf 64)✓ %s$(tput sgr0)\n" "$@"
+}
+
+e_error() {
+    printf "$(tput setaf 1)x %s$(tput sgr0)\n" "$@"
+}
+
+e_warning() {
+    printf "$(tput setaf 136)! %s$(tput sgr0)\n" "$@"
+}
+
+# Check if cursor command exists
+if ! command -v cursor &> /dev/null; then
+    e_error "Cursor command not found. Please install Cursor first."
+    exit 1
+fi
+
+# Check if extensions list exists
+if [ ! -f "${EXTENSIONS_LIST}" ]; then
+    e_warning "Extensions list not found. Creating a new one..."
+    cursor --list-extensions > "${EXTENSIONS_LIST}"
+    e_success "Extensions list created: ${EXTENSIONS_LIST}"
+    exit 0
+fi
+
+e_header "Syncing Cursor extensions..."
+
+# Get currently installed extensions
+INSTALLED_EXTENSIONS=$(cursor --list-extensions)
+
+# Read extensions from the list file
+DESIRED_EXTENSIONS=$(cat "${EXTENSIONS_LIST}")
+
+# Install missing extensions
+for ext in $DESIRED_EXTENSIONS; do
+    if ! echo "$INSTALLED_EXTENSIONS" | grep -q "^${ext}$"; then
+        e_warning "Installing extension: ${ext}"
+        cursor --install-extension "${ext}" --force
+        if [ $? -eq 0 ]; then
+            e_success "Installed: ${ext}"
+        else
+            e_error "Failed to install: ${ext}"
+        fi
+    fi
+done
+
+# Uninstall extensions not in the list
+for ext in $INSTALLED_EXTENSIONS; do
+    if ! echo "$DESIRED_EXTENSIONS" | grep -q "^${ext}$"; then
+        e_warning "Uninstalling extension: ${ext}"
+        cursor --uninstall-extension "${ext}"
+        if [ $? -eq 0 ]; then
+            e_success "Uninstalled: ${ext}"
+        else
+            e_error "Failed to uninstall: ${ext}"
+        fi
+    fi
+done
+
+e_success "Cursor extensions synced!"
+
+

@@ -209,6 +209,32 @@ mirrorfiles() {
     link "git/gitattributes"  ".gitattributes"
     link "git/gitignore"      ".gitignore"
 
+    # Sync Cursor settings
+    e_header "Syncing Cursor settings..."
+    local cursor_user_dir="${HOME}/Library/Application Support/Cursor/User"
+    
+    # Create Cursor User directory if it doesn't exist
+    if [ ! -d "${cursor_user_dir}" ]; then
+        mkdir -p "${cursor_user_dir}"
+    fi
+    
+    # Backup existing files if they exist and are not symlinks
+    if [ -f "${cursor_user_dir}/settings.json" ] && [ ! -L "${cursor_user_dir}/settings.json" ]; then
+        mv "${cursor_user_dir}/settings.json" "${cursor_user_dir}/settings.json.backup"
+        e_warning "Backed up existing settings.json"
+    fi
+    
+    if [ -f "${cursor_user_dir}/keybindings.json" ] && [ ! -L "${cursor_user_dir}/keybindings.json" ]; then
+        mv "${cursor_user_dir}/keybindings.json" "${cursor_user_dir}/keybindings.json.backup"
+        e_warning "Backed up existing keybindings.json"
+    fi
+    
+    # Create symlinks for Cursor settings
+    ln -sf "${DOTFILES_DIRECTORY}/cursor/settings.json" "${cursor_user_dir}/settings.json"
+    ln -sf "${DOTFILES_DIRECTORY}/cursor/keybindings.json" "${cursor_user_dir}/keybindings.json"
+    
+    e_success "Cursor settings synced!"
+
     e_success "Dotfiles update complete!"
 }
 

@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Export currently installed Cursor extensions to the dotfiles repo
+
+DOTFILES_DIRECTORY="${HOME}/dvp/dotfiles"
+EXTENSIONS_LIST="${DOTFILES_DIRECTORY}/cursor/.cursor-extensions.txt"
+
+# Colors
+e_success() {
+    printf "$(tput setaf 64)✓ %s$(tput sgr0)\n" "$@"
+}
+
+e_error() {
+    printf "$(tput setaf 1)x %s$(tput sgr0)\n" "$@"
+}
+
+# Check if cursor command exists
+if ! command -v cursor &> /dev/null; then
+    e_error "Cursor command not found. Please install Cursor first."
+    exit 1
+fi
+
+# Export extensions list
+cursor --list-extensions > "${EXTENSIONS_LIST}"
+
+if [ $? -eq 0 ]; then
+    e_success "Extensions exported to: ${EXTENSIONS_LIST}"
+    echo ""
+    echo "Installed extensions:"
+    cat "${EXTENSIONS_LIST}"
+else
+    e_error "Failed to export extensions"
+    exit 1
+fi
+
+
